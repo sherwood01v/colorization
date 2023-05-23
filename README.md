@@ -1,2 +1,14 @@
 # colorization
-Colorization of images via convolutional autoencoder architecture.
+### `hyperparam_working.py`<br>
+#### Script uses Random search from keras tuner to tune hyperparameters for convolutional autoencoder. This includes 5 hyperparameters: batch_size, shuffle, optimizer, num_layers, filters. All of these are described below.<br>
+In the beginning there are performed some data sorting inside the folder and all images from training set are converted to LAB format.<br>
+LAB covers all potential colours, every colour that the human eye is able to see. It has three channels: L serves for usual grey scale images, A and B for color. The LAB color space is often used in computer vision tasks because it separates the color information (represented by the AB channels) from the lightness information (represented by the L channel). This separation can be beneficial for certain applications. For example, in image processing tasks like image denoising or image inpainting, separating the color and lightness information can help preserve the overall structure of the image while modifying or reconstructing the color information.<br>
+Inside the <b>MyHyperModel</b> class the model is represented. As the aim of the work wasn't suffistically create new model architecture, the structure of encoder and decoder part was taken under experiment. After trying several option from both source and web, the following structures were obtained.<br>
+Intermediate convolutional layers were obteined based on the hyperparameter `num_layers` and `filters`.<br>
+In this code, the variable num_layers is defined as a hyperparameter using hp.Int from the Keras Tuner. It specifies the number of convolutional layers in the network, with a minimum value of 1, maximum value of 5, and a step size of 1 (indicating that the number of layers can only be an integer between 1 and 5, inclusive).<br>
+A for loop is then used to iterate num_layers times. Inside the loop, a convolutional layer (layers.Conv2D) is defined. The number of filters in the convolutional layer is set as a hyperparameter using hp.Choice from the Keras Tuner. The possible values for the number of filters are specified as [256, 512]. The kernel size of the convolutional layer is set as (3, 3), indicating a 3x3 filter. The activation function for the layer is set to 'relu', and the padding is set to 'same', which means the output size of the layer will be the same as the input size.<br>
+After that hyperparameter tunung performed via RandomSearch method. For better tunung, around 50 trials was performed, after each of them best hyperparamaetrs was identified based on val_accuracy.<br>
+Further building/fitting the model with hyperparameters were performed. The obtained hyperparamter configuration is stored in the archive `final_model`.
+
+### `final model colorizer.py`<br>
+The same model now trained on hyperparameters obtained before. The same techniques of compiling/building/fitting the model is performed (as in previous script). The model is saved and ready for developing/implementation production. 
